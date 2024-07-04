@@ -13,8 +13,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Write CHANGELOG
+        run: |
+          { printf "### Release ${{ github.event.release.tag_name }} \n\n${{ github.event.release.body }}\n\n"; cat CHANGELOG.md; } > tmp.txt && mv tmp.txt CHANGELOG.md
+
+      - name: Write version in setup.py
+        run: |
+          sed -i "s/version='.*'/version='${{ github.event.release.tag_name }}'/g" setup.py
+
+      - name: Commit and push new release
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: release ${{ github.event.release.tag_name }}
+
+      - name: Create and push backup branch
+        run: |
+          backup_branch="release/${{ github.event.release.tag_name }}"
+          git checkout -b "$backup_branch"
+          git push -f origin "$backup_branch"
 
       - name: Set up Python
         uses: actions/setup-python@v2
