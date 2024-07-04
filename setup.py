@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     ## Not edited. Release is generated automatically by GitHub Actions workflow from Release Publisher
-    version='0.0.6',
+    version='0.0.7',
     ######################################################################
     name='dumppackage',
     url='https://github.com/medeirosinacio/test-pypi-package',
