@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     readme = fh.read()
 
 setup(name='dumppackage',
-    version='0.0.2',
+    version='0.0.3',
     url='https://github.com/medeirosinacio/test-pypi-package',
     license='MIT License',
     author='Douglas Medeiros',
