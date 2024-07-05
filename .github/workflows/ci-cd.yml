@@ -11,8 +11,6 @@ jobs:
   commit-new-release:
     name: Commit new release
     runs-on: ubuntu-latest
-    if: |
-      !git log --format='%H' --perl-regexp --grep="^release ${{ github.event.release.tag_name }}$" HEAD | grep -q .
 
     steps:
       - name: Checkout
@@ -22,20 +20,35 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.BOT_STEFANZWEIFEL_GIT_AUTO_COMMIT_ACTION }}
 
+      - name: Check for duplicate release commit
+        id: check_commit
+        run: |
+          if git log --format='%H' --perl-regexp --grep="^release ${{ github.event.release.tag_name }}$" HEAD | grep -q . || false; then
+            echo "Release commit already exists."
+            exit 0  # Exit with success to continue with other jobs
+          else
+            echo "No existing release commit found."
+            exit 1  # Exit with failure to skip subsequent steps in this job
+          fi
+
       - name: Write CHANGELOG
+        if: steps.check_commit.outcome == 'success'
         run: |
           { printf "### Release ${{ github.event.release.tag_name }} \n\n${{ github.event.release.body }}\n\n"; cat CHANGELOG.md; } > tmp.txt && mv tmp.txt CHANGELOG.md
 
       - name: Write version in setup.py
+        if: steps.check_commit.outcome == 'success'
         run: |
           sed -i "s/version='.*'/version='${{ github.event.release.tag_name }}'/g" setup.py
 
       - name: Commit and push new release
+        if: steps.check_commit.outcome == 'success'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: release ${{ github.event.release.tag_name }}
 
       - name: Create and push backup branch
+        if: steps.check_commit.outcome == 'success'
         run: |
           backup_branch="release/${{ github.event.release.tag_name }}"
           git checkout -b "$backup_branch"
