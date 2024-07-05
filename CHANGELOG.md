@@ -1,3 +1,7 @@
+### Release 0.3.0 
+
+**Full Changelog**: https://github.com/medeirosinacio/test-pypi-package/compare/0.2.4...0.3.0
+
 ### Release 0.2.4 
 
 **Full Changelog**: https://github.com/medeirosinacio/test-pypi-package/compare/0.2.3...0.2.4
