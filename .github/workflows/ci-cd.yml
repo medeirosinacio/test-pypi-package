@@ -24,9 +24,9 @@ jobs:
         id: check_commit
         run: |
           if ! git log --format='%H' --perl-regexp --grep="^release ${{ github.event.release.tag_name }}$" HEAD | grep -q . || false; then
-            echo "::save-state name=SKIP::false"
+            echo "SKIP=false" >> "$GITHUB_OUTPUT"
           else
-            echo "::save-state name=SKIP::true"
+            echo "SKIP=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Write CHANGELOG
