@@ -14,7 +14,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     author_email='ola@dump.tec.br',
-    keywords='Pacote',
+    keywords='package',
     description=u'Example of a package to be published in PyPI',
     packages=['dumppackage'],
     install_requires=['numpy'],

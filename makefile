@@ -18,7 +18,7 @@ build: ## Build package
 	@make check-python3
 	@python3 setup.py sdist
 
-upload: ## Upload package to PyPI
+publish: ## Upload/publish package to PyPI
 	@make check-python3
 	@make check-token
 	@python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
