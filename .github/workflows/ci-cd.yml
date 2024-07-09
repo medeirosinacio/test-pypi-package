@@ -48,9 +48,8 @@ jobs:
       - name: Create and push backup branch
         if: steps.check_commit.outputs.SKIP == 'false'
         run: |
-          backup_branch="release/${{ github.event.release.tag_name }}"
-          git checkout -b "$backup_branch"
-          git push origin "$backup_branch"
+          git tag ${{ github.event.release.tag_name }} -f
+          git push origin ${{ github.event.release.tag_name }} -f
 
   build-n-publish:
     name: Build and publish to PyPI
@@ -61,7 +60,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: release/${{ github.event.release.tag_name }}
+          ref: tags/${{ github.event.release.tag_name }}
           fetch-depth: 0
 
       - name: Set up Python
